@@ -3,6 +3,7 @@ from collections import defaultdict
 from itertools import product
 import json
 
+from PIL import Image
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -39,7 +40,7 @@ def load_network(cfg):
 
 def save_img(path, img):
     os.makedirs(os.path.split(path)[0], exist_ok=True)
-    io.imsave(path, img, check_contrast=False)
+    Image.fromarray(img).save(path)
 
 
 def make_dataset(root):
