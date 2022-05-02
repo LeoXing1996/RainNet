@@ -23,7 +23,7 @@ class RainNetModel(BaseModel):
                                       not opt.no_dropout, opt.init_type, opt.init_gain, self.gpu_ids)
         self.relu = nn.ReLU()
 
-        if self.isTrain: 
+        if self.isTrain:
             self.gan_mode = opt.gan_mode
             netD = networks.NLayerDiscriminator(opt.output_nc, opt.ndf, opt.n_layers_D, networks.get_norm_layer(opt.normD))
             self.netD = networks.init_net(netD, opt.init_type, opt.init_gain, self.gpu_ids)
@@ -85,7 +85,7 @@ class RainNetModel(BaseModel):
 
         self.loss_D_global = global_fake + global_real
         self.loss_D_local = local_fake + local_real
-        
+
         gradient_penalty, gradients = networks.cal_gradient_penalty(self.netD, real_AB.detach(), fake_AB.detach(),
                                                                     'cuda', mask=self.mask)
         self.loss_D_gp = gradient_penalty
@@ -100,7 +100,7 @@ class RainNetModel(BaseModel):
         pred_fake, ver_fake, featg_fake, featl_fake = self.netD(fake_AB, self.mask, feat_loss=True)
         self.loss_G_global = self.criterionGAN(pred_fake, True)
         self.loss_G_local = self.criterionGAN(ver_fake, True)
-        
+
         self.loss_G_GAN =self.opt.lambda_a * self.loss_G_global + self.opt.lambda_v * self.loss_G_local
 
         self.loss_G_L1 = self.criterionL1(self.attentioned, self.real) * self.opt.lambda_L1
